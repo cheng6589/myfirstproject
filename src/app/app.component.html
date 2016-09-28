@@ -1,0 +1,53 @@
+<div class="container">
+<!-- View Mode -->
+<section *ngIf="!isEditMode">
+<h1>{{title}}</h1>
+
+<h4>List of Users</h4>
+
+<ul class="list-group">
+  <li class="list-group-item" *ngFor="let u of users; let i = index" (click)="selectedUser = u">
+    {{u.name}} <span> {{u.age}} </span> 
+    <button class="btn btn-danger" (click)="deleteUser(i)">Delete</button>
+  </li>
+  <li class="list-group-item list-group-item-info">
+    Sum Age for those under 50: {{users | filterPipe | sumPipe  | myPipe : " in total"}}
+  </li>
+</ul>
+<button class="btn btn-success" (click)="addUser()">Add User</button>
+<hr />
+<h4>Users under 50</h4>
+<pre>{{users| filterPipe | json}}</pre>
+
+<hr />
+<h4>User Details</h4> 
+<div>
+  <label>Name:</label>{{selectedUser.name}} <br/>
+  <label>Age:</label>{{selectedUser.age | myPipe}} <br/>
+  <label>Weight:</label>{{selectedUser.weight}} <br/>
+  <label>Height:</label>{{selectedUser.height}} <br/>
+</div>
+
+<button class ="btn btn-primary" (click) ="isEditMode=true">EDIT</button>
+<button class ="btn btn-primary" (click) = "getBMI()">Check BMI</button>
+<button class ="btn btn-primary" (click) = "onCheckAge()">Check Age</button>
+</section>
+
+<section *ngIf ="isEditMode">
+  <button class="btn btn-default" (click) ="isEditMode=false">Back></button>
+  <!-- Edit mode -->
+  <h2>Editor</h2>
+  <pre>{{selectedUser | json}}</pre>
+  <div>
+    Please enter your name : <input class="form-control" type="text" [(ngModel)]="selectedUser.name" /><br/>
+    Tell us your age : <input class="form-control" type="number" [(ngModel)]="selectedUser.age" /><br/>
+    Weight :<input class="form-control" type="number" [(ngModel)]="selectedUser.weight" /><br/>
+    Height : <input class="form-control" type="number" [(ngModel)]="selectedUser.height" /><br/>
+  </div>
+  <div>
+    <b>Your BMI : </b> {{selectedUser.getBMI()}}
+    <span *ngIf="selectedUser.isHealthy()" class ="label label-success"> You are safe!! </span>
+    <span *ngIf="!selectedUser.isHealthy()" class ="label label-warning"> Take care of you food intake!! </span>
+  </div>
+</section>
+</div>
